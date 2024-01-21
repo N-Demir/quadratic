@@ -30,6 +30,7 @@ import {
   JsClipboard,
   JsCodeCell,
   JsHtmlOutput,
+  JsPngOutput,
   JsRenderCell,
   JsRenderCodeCell,
   JsRenderFill,
@@ -484,6 +485,11 @@ export class Grid {
 
   getHtmlOutput(sheetId: string): JsHtmlOutput[] {
     const data = this.gridController.getHtmlOutput(sheetId);
+    return JSON.parse(data);
+  }
+
+  getPngOutput(sheetId: string): JsPngOutput[] {
+    const data = this.gridController.getPngOutput(sheetId);
     return JSON.parse(data);
   }
 

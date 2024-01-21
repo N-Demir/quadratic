@@ -56,6 +56,14 @@ impl GridController {
         Ok(serde_json::to_string::<[JsHtmlOutput]>(&output).map_err(|e| e.to_string())?)
     }
 
+    /// Returns all data for rendering PNG for a sheet
+    #[wasm_bindgen(js_name = "getPngOutput")]
+    pub fn get_png_output(&self, sheet_id: String) -> Result<String, JsValue> {
+        let sheet_id = SheetId::from_str(&sheet_id).unwrap();
+        let output = self.sheet(sheet_id).get_png_output();
+        Ok(serde_json::to_string::<[JsPngOutput]>(&output).map_err(|e| e.to_string())?)
+    }
+
     /// Returns data for rendering code cells as a string containing a JSON array
     /// of [`JsRenderCodeCell`].
     #[wasm_bindgen(js_name = "getAllRenderCodeCells")]

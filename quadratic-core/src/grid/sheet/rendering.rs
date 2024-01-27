@@ -6,7 +6,7 @@ use crate::{
         code_run,
         js_types::{
             JsHtmlOutput, JsRenderBorder, JsRenderCell, JsRenderCellSpecial, JsRenderCodeCell,
-            JsRenderCodeCellState, JsRenderFill, JsPngOutput
+            JsRenderCodeCellState, JsRenderFill, JsImageOutput
         },
         CellAlign, CodeCellLanguage, CodeRun, Column, NumericFormatKind,
     },
@@ -285,20 +285,20 @@ impl Sheet {
             .collect()
     }
 
-    pub fn get_png_output(&self) -> Vec<JsPngOutput> {
+    pub fn get_image_output(&self) -> Vec<JsImageOutput> {
         self.code_cells
             .iter()
             .filter_map(|(cell_ref, code_cell_value)| {
                 let output = code_cell_value.get_output_value(0, 0)?;
-                if !matches!(output, CellValue::Png(_)) {
+                if !matches!(output, CellValue::Image(_)) {
                     return None;
                 }
                 let pos = self.cell_ref_to_pos(*cell_ref)?;
-                Some(JsPngOutput {
+                Some(JsImageOutput {
                     sheet_id: self.id.to_string(),
                     x: pos.x,
                     y: pos.y,
-                    png: output.to_display(None, None, None),
+                    image: output.to_display(None, None, None),
                 })
             })
             .collect()

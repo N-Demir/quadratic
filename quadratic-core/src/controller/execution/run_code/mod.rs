@@ -43,6 +43,9 @@ impl GridController {
             if new_code_run.is_html() {
                 transaction.summary.html.insert(sheet_id);
             }
+            if new_code_run.is_image() {
+                transaction.summary.image.insert(sheet_id);
+            }
             let (old_index, old_code_run) = sheet.code_runs.insert_full(pos, new_code_run.clone());
 
             // keep the orderings of the code runs consistent, particularly when undoing/redoing
@@ -60,6 +63,9 @@ impl GridController {
         if let Some(old_code_run) = &old_code_run {
             if old_code_run.is_html() {
                 transaction.summary.html.insert(sheet_id);
+            }
+            if old_code_run.is_image() {
+                transaction.summary.image.insert(sheet_id);
             }
         }
 

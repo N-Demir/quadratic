@@ -50,7 +50,7 @@ pub enum CellValue {
     Html(String),
     #[cfg_attr(test, proptest(skip))]
     Code(CodeCellValue),
-    Png(Vec<u8>),
+    Image(Vec<u8>),
 }
 impl fmt::Display for CellValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -65,7 +65,7 @@ impl fmt::Display for CellValue {
             CellValue::Error(e) => write!(f, "{}", e.msg),
             CellValue::Html(s) => write!(f, "{}", s),
             CellValue::Code(code) => write!(f, "{:?}", code),
-            CellValue::Png(b) => write!(f, "PNG({} bytes)", b.len()),
+            CellValue::Image(b) => write!(f, "IMAGE({} bytes)", b.len()),
         }
     }
 }
@@ -90,7 +90,8 @@ impl CellValue {
             CellValue::Error(_) => "error",
             CellValue::Html(_) => "html",
             CellValue::Code(_) => "python",
-            CellValue::Png(_) => "png",
+            CellValue::Png(_) => "png"
+            CellValue::Image(_) => "image",
         }
     }
     /// Returns a formula-source-code representation of the value.
@@ -106,7 +107,7 @@ impl CellValue {
             CellValue::Error(_) => "[error]".to_string(),
             CellValue::Html(s) => s.clone(),
             CellValue::Code(_) => todo!("repr of python"),
-            CellValue::Png(b) => format!("{:?}", &b),
+            CellValue::Image(b) => format!("{:?}", &b),
         }
     }
 
@@ -150,7 +151,7 @@ impl CellValue {
             CellValue::Blank => String::new(),
             CellValue::Text(s) => s.to_string(),
             CellValue::Html(s) => s.to_string(),
-            CellValue::Png(b) => format!("{:?}", &b),
+            CellValue::Image(b) => format!("{:?}", &b),
             CellValue::Number(n) => {
                 let numeric_format = numeric_format.unwrap_or_default();
                 let use_commas = numeric_commas.is_some_and(|c| c)
@@ -226,7 +227,7 @@ impl CellValue {
             CellValue::Blank => String::new(),
             CellValue::Text(s) => s.to_string(),
             CellValue::Html(_) => String::new(),
-            CellValue::Png(_) => String::new(),
+            CellValue::Image(_) => String::new(),
             CellValue::Number(n) => n.to_string(),
             CellValue::Logical(true) => "true".to_string(),
             CellValue::Logical(false) => "false".to_string(),
@@ -336,7 +337,7 @@ impl CellValue {
             | (CellValue::Duration(_), _)
             | (CellValue::Html(_), _)
             | (CellValue::Code(_), _)
-            | (CellValue::Png(_), _)
+            | (CellValue::Image(_), _)
             | (CellValue::Blank, _) => return Ok(None),
         }))
     }
@@ -359,7 +360,7 @@ impl CellValue {
                 CellValue::Blank => 6,
                 CellValue::Html(_) => 7,
                 CellValue::Code(_) => 8,
-                CellValue::Png(_) => 9,
+                CellValue::Image(_) => 9,
             }
         }
 
@@ -495,7 +496,7 @@ impl CellValue {
             // todo: probably use a crate here to detect html
             value = CellValue::Html(s.to_string());
         } else if s.as_bytes().starts_with(b"\x89PNG\r\n\x1a\n") {  // Decimal: 137 80 78 71 13 10 26 10
-            value = CellValue::Png(s.clone().into_bytes());
+            value = CellValue::Image(s.clone().into_bytes());
 
         } else if let Some(boolean) = CellValue::unpack_boolean(s) {
             value = boolean;
@@ -507,6 +508,10 @@ impl CellValue {
 
     pub fn is_html(&self) -> bool {
         matches!(self, CellValue::Html(_))
+    }
+
+    pub fn is_image(&self) -> bool {
+        matches!(self, CellValue::Image(_))
     }
 }
 

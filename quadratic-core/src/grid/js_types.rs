@@ -227,11 +227,11 @@ pub struct JsHtmlOutput {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "js", derive(ts_rs::TS))]
-pub struct JsPngOutput {
+pub struct JsImageOutput {
     pub sheet_id: String,
     pub x: i64,
     pub y: i64,
-    pub png: String, // TODO(jrice): Vec<u8>?
+    pub image: String, // TODO(jrice): Vec<u8>?
 }
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Eq, Hash)]

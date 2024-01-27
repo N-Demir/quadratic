@@ -94,7 +94,7 @@ impl<'a> TryFrom<&'a CellValue> for String {
             CellValue::Error(e) => Err(e.msg.clone()),
             CellValue::Html(s) => Ok(s.clone()),
             CellValue::Code(_) => Ok(String::new()),
-            CellValue::Png(b) => Ok(format!("{:?}", &b)),
+            CellValue::Image(b) => Ok(format!("{:?}", &b)),
         }
     }
 }
@@ -129,7 +129,7 @@ impl<'a> TryFrom<&'a CellValue> for f64 {
             CellValue::Error(e) => Err(e.msg.clone()),
             CellValue::Html(_) => Ok(0.0),
             CellValue::Code(_) => Ok(0.0),
-            CellValue::Png(_) => Ok(0.0),
+            CellValue::Image(_) => Ok(0.0),
         }
     }
 }

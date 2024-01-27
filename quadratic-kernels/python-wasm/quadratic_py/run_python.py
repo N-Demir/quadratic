@@ -3,7 +3,7 @@ import re
 import traceback
 from contextlib import redirect_stdout
 from decimal import Decimal, DecimalException
-from io import StringIO
+import io
 
 import getCellsDB
 import micropip
@@ -149,13 +149,14 @@ def ensure_not_cell(item):
 
 
 def error_result(
-    error: Exception, code: str, cells_accessed: list[list], sout: StringIO, line_number: int,
+    error: Exception, code: str, cells_accessed: list[list], sout: io.StringIO, line_number: int,
 ) -> dict:
     error_class = error.__class__.__name__
     detail = error.args[0]
     return {
         "output_value": None,
         "array_output": None,
+        "bytes_output": None,
         "cells_accessed": cells_accessed,
         "std_out": sout.getvalue(),
         "success": False,
@@ -279,7 +280,7 @@ async def run_python(code):
         "cells": CellsFunc(),
     }
 
-    sout = StringIO()
+    sout = io.StringIO()
     output_value = None
 
     try:
@@ -350,6 +351,7 @@ async def run_python(code):
         except Exception:
             pass
 
+        bytes_output = None
         if plotly_html is not None and plotly_html.result is not None:
             if output_value is not None or array_output is not None:
                 err = RuntimeError(
@@ -361,7 +363,10 @@ async def run_python(code):
                     err, code, cells_accessed, sout, code_trace.get_return_line(code)
                 )
             else:
-                output_value = plotly_html.result
+                if isinstance(plotly_html.result, io.BytesIO):
+                    bytes_output = plotly_html.result.getvalue()
+                else:
+                    output_value = plotly_html.result
 
         # removes output_value if there's an array or None
         if array_output or output_value is None:
@@ -370,6 +375,7 @@ async def run_python(code):
         return {
             "output_value": str(output_value),
             "array_output": ensure_not_cell(array_output),
+            "bytes_output": bytes_output,
             "cells_accessed": cells_accessed,
             "std_out": sout.getvalue(),
             "success": True,

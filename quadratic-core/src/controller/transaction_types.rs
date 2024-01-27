@@ -12,6 +12,7 @@ pub struct JsCodeResult {
     input_python_std_out: Option<String>,
     output_value: Option<String>,
     array_output: Option<Vec<Vec<String>>>,
+    bytes_output: Option<Vec<u8>>,
     line_number: Option<u32>,
     pub cancel_compute: Option<bool>,
 }
@@ -52,6 +53,7 @@ impl JsCodeResult {
         input_python_std_out: Option<String>,
         output_value: Option<String>,
         array_output: Option<Vec<Vec<String>>>,
+        bytes_output: Option<Vec<u8>>,
         line_number: Option<u32>,
         cancel_compute: Option<bool>,
     ) -> Self {
@@ -63,6 +65,7 @@ impl JsCodeResult {
             input_python_std_out,
             output_value,
             array_output,
+            bytes_output,
             line_number,
             cancel_compute,
         }
@@ -81,6 +84,7 @@ impl JsCodeResult {
         input_python_std_out: Option<String>,
         output_value: Option<String>,
         array_output: Option<String>,
+        bytes_output: Option<Vec<u8>>,
         line_number: Option<u32>,
         cancel_compute: Option<bool>,
     ) -> Self {
@@ -102,6 +106,7 @@ impl JsCodeResult {
             input_python_std_out,
             output_value,
             array_output,
+            bytes_output,
             line_number,
             cancel_compute: cancel_compute.or(Some(false)),
         }

@@ -41,6 +41,8 @@ mod tests {
     };
     use bigdecimal::BigDecimal;
 
+    // TODO(jrice): Test bytes output
+
     #[test]
     fn test_run_python() {
         let mut gc = GridController::test();
@@ -62,6 +64,7 @@ mod tests {
             None,
             None,
             Some("test".to_string()),
+            None,
             None,
             None,
             None,
@@ -112,6 +115,7 @@ mod tests {
             None,
             None,
             Some("hello world".to_string()),
+            None,
             None,
             None,
             None,
@@ -187,6 +191,7 @@ mod tests {
                 None,
                 None,
                 None,
+                None,
             ))
             .is_ok());
 
@@ -247,6 +252,7 @@ mod tests {
             None,
             None,
             None,
+            None,
         ));
 
         // replace the value in (0, 0) to trigger the python calculation
@@ -287,6 +293,7 @@ mod tests {
                 None,
                 None,
                 Some("11".to_string()),
+                None,
                 None,
                 None,
                 None,
@@ -337,6 +344,7 @@ mod tests {
                 Some(python_array(vec![1, 2, 3])),
                 None,
                 None,
+                None,
             ))
             .is_ok());
 
@@ -375,6 +383,7 @@ mod tests {
             None,
             None,
             Some("".into()),
+            None,
             None,
             None,
             Some(true),
@@ -420,6 +429,7 @@ mod tests {
                 None,
                 None,
                 None,
+                None,
             ))
             .is_ok());
 
@@ -461,6 +471,7 @@ mod tests {
                 None,
                 None,
                 None,
+                None,
             ))
             .is_ok());
 
@@ -499,6 +510,7 @@ mod tests {
                 None,
                 None,
                 Some("new output second time".to_string()),
+                None,
                 None,
                 None,
                 None,
@@ -565,6 +577,7 @@ mod tests {
             None,
             None,
             None,
+            None,
         ));
         assert!(result.is_ok());
         assert_eq!(result.clone().ok().unwrap().cell_sheets_modified.len(), 1);
@@ -605,6 +618,7 @@ mod tests {
             None,
             None,
             Some("3".to_string()),
+            None,
             None,
             None,
             None,

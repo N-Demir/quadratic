@@ -222,6 +222,13 @@ impl CellValue {
         }
     }
 
+    pub fn into_bytes(self) -> Vec<u8> {
+        match self {
+            CellValue::Image(img) => img,
+            _ => vec![],
+        }
+    }
+
     pub fn to_edit(&self) -> String {
         match self {
             CellValue::Blank => String::new(),
@@ -495,9 +502,6 @@ impl CellValue {
         } else if s.to_lowercase().starts_with("<html>") || s.to_lowercase().starts_with("<div>") {
             // todo: probably use a crate here to detect html
             value = CellValue::Html(s.to_string());
-        } else if s.as_bytes().starts_with(b"\x89PNG\r\n\x1a\n") {  // Decimal: 137 80 78 71 13 10 26 10
-            value = CellValue::Image(s.clone().into_bytes());
-
         } else if let Some(boolean) = CellValue::unpack_boolean(s) {
             value = boolean;
         } else {

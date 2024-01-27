@@ -1,13 +1,17 @@
+import { CELL_HEIGHT, CELL_WIDTH } from '@/constants/gridConstants';
 import {sheets} from '@/grid/controller/Sheets';
 import {Sheet} from '@/grid/sheet/Sheet';
 import {JsImageOutput} from '@/quadratic-core/types';
 import {colors} from '@/theme/colors';
 
-const DEFAULT_IMAGE_WIDTH = '600';
-const DEFAULT_IMAGE_HEIGHT = '460';
+const DEFAULT_IMAGE_WIDTH = 600;
+const DEFAULT_IMAGE_HEIGHT = 460;
+
+const PNG_HEADER = [137, 80, 78, 71, 13, 10, 26, 10];
 
 export class ImageCell {
   private imageCell: JsImageOutput;
+  private image: HTMLOrSVGImageElement;
 
   sheet: Sheet;
 
@@ -30,10 +34,33 @@ export class ImageCell {
     // the 0.5 is adjustment for the border
     this.div.style.left = `${offset.x - 0.5}px`;
     this.div.style.top = `${offset.y + offset.height - 0.5}px`;
+    this.div.style.minWidth = `${CELL_WIDTH}px`;
+    this.div.style.minHeight = `${CELL_HEIGHT}px`;
+
+    this.image = this.createImage(imageCell.image);
+
+    this.div.append(this.image)
 
     if (this.sheet.id !== sheets.sheet.id) {
       this.div.style.visibility = 'hidden';
     }
+  }
+
+  private createImage(imageData: Array<number>): HTMLOrSVGImageElement {
+    const image = document.createElement("img");
+    const base64ImageData = btoa(String.fromCharCode.apply(null, imageData));
+
+    let imageFormat = "unknown";
+    if (imageData.slice(0, PNG_HEADER.length).toString() === PNG_HEADER.toString()) {
+      imageFormat = "png";
+    } else {
+      console.log("Unknown image header: ", imageData.slice(0, 16));
+    }
+
+    image.src = `data:image/${imageFormat};base64,${base64ImageData}`
+    image.width = this.width;
+    image.height = this.height;
+    return image
   }
 
   get x(): number {
@@ -44,11 +71,11 @@ export class ImageCell {
     return Number(this.imageCell.y);
   }
 
-  private get width(): string {
-    return DEFAULT_IMAGE_WIDTH;  // TODO(jrice): from image
+  private get width(): number {
+    return DEFAULT_IMAGE_WIDTH;  // TODO(jrice): size from image?
   }
 
-  private get height(): string {
+  private get height(): number {
     return DEFAULT_IMAGE_HEIGHT;
   }
 
@@ -60,6 +87,7 @@ export class ImageCell {
 
   update(imageCell: JsImageOutput) {
     this.imageCell = imageCell;
+    // TODO: Update the actual image, too
   }
 
   changeSheet(sheetId: string) {

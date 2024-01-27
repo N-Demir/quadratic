@@ -231,7 +231,7 @@ pub struct JsImageOutput {
     pub sheet_id: String,
     pub x: i64,
     pub y: i64,
-    pub image: String, // TODO(jrice): Vec<u8>?
+    pub image: Vec<u8>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, PartialEq, Eq, Hash)]

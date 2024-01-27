@@ -4,9 +4,7 @@ import {
   useState
 } from 'react';
 import './ImageCells.css';
-import {
-  imageCellsHandler
-} from './ImageCellsHandler';
+import {imageCellsHandler} from './ImageCellsHandler';
 
 export const ImageCells = () => {
   const [div, setDiv] = useState<HTMLDivElement | null>(null);

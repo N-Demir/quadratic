@@ -48,7 +48,7 @@ impl Sheet {
                 text_color: None,
                 special: Some(JsRenderCellSpecial::Chart),
             };
-        } else if let CellValue::Png(_) = value {
+        } else if let CellValue::Image(_) = value {
             return JsRenderCell {
                 x,
                 y,
@@ -290,7 +290,7 @@ impl Sheet {
             .iter()
             .filter_map(|(cell_ref, code_cell_value)| {
                 let output = code_cell_value.get_output_value(0, 0)?;
-                if !matches!(output, CellValue::Image(_)) {
+                if !output.is_image() {
                     return None;
                 }
                 let pos = self.cell_ref_to_pos(*cell_ref)?;
@@ -298,7 +298,7 @@ impl Sheet {
                     sheet_id: self.id.to_string(),
                     x: pos.x,
                     y: pos.y,
-                    image: output.to_display(None, None, None),
+                    image: output.into_bytes(),
                 })
             })
             .collect()
@@ -613,6 +613,7 @@ mod tests {
             None,
             None,
             Some("<html></html>".into()),
+            None,
             None,
             None,
             None,

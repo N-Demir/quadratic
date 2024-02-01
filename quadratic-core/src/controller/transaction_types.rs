@@ -30,6 +30,9 @@ impl JsCodeResult {
     pub fn array_output(&self) -> Option<Vec<Vec<String>>> {
         self.array_output.clone()
     }
+    pub fn bytes_output(&self) -> Option<Vec<u8>> {
+        self.bytes_output.clone()
+    }
     pub fn error_msg(&self) -> Option<String> {
         self.error_msg.clone()
     }

@@ -59,7 +59,7 @@ impl CodeRun {
     }
 
     pub fn is_image(&self) -> bool {
-        if let Some(code_cell_value) = self.get_output_value(0, 0) {
+        if let Some(code_cell_value) = self.cell_value_at(0, 0) {
             code_cell_value.is_image()
         } else {
             false

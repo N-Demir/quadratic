@@ -90,7 +90,6 @@ impl CellValue {
             CellValue::Error(_) => "error",
             CellValue::Html(_) => "html",
             CellValue::Code(_) => "python",
-            CellValue::Png(_) => "png"
             CellValue::Image(_) => "image",
         }
     }

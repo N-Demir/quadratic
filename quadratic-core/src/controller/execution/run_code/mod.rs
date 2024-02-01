@@ -270,6 +270,9 @@ impl GridController {
                 } else {
                     Value::Single("".into())
                 }
+            } else if let Some(bytes_output) = js_code_result.bytes_output() {
+                // TODO(jrice): Parse and tag the output here with the proper image type
+                Value::Single(CellValue::Image(bytes_output))
             } else if let Some(output_value) = js_code_result.output_value() {
                 let (cell_value, ops) = CellValue::from_string(&output_value, start.into(), sheet);
                 transaction.reverse_operations.splice(0..0, ops);

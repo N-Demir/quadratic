@@ -59,8 +59,10 @@ impl GridController {
     /// Returns all data for rendering images for a sheet
     #[wasm_bindgen(js_name = "getImageOutput")]
     pub fn get_image_output(&self, sheet_id: String) -> Result<String, JsValue> {
-        let sheet_id = SheetId::from_str(&sheet_id).unwrap();
-        let output = self.sheet(sheet_id).get_image_output();
+        let Some(sheet) = self.try_sheet_from_string_id(sheet_id) else {
+            return Result::Err("Sheet not found".into());
+        };
+        let output = sheet.get_image_output();
         Ok(serde_json::to_string::<[JsImageOutput]>(&output).map_err(|e| e.to_string())?)
     }
 
